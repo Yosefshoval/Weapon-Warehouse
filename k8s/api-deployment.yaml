@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: yosefshoval/weapons:v
+        image: yosefshoval/weapons:v1
         ports:
         - containerPort: 8000
         env:

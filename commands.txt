@@ -8,3 +8,4 @@ docker push yosefshoval/weapons:v1
 
 kubectl apply -f ./k8s
 
+minikube service app-svc

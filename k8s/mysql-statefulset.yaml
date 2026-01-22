@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: mysql:latest
+        image: mysql:9
         env:
           - name: MYSQL_HOST
             value: mysql
@@ -38,7 +38,7 @@ spec:
           mountPath: /mysql/data
   volumeClaimTemplates:
   - metadata:
-      name: mysql
+      name: mysql-data
     spec:
       accessModes: [ "ReadWriteOnce" ]
       storageClassName: mysql-data
