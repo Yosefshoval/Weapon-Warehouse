@@ -10,15 +10,27 @@ class DBConnector:
         self.database = database
         self.connection = None
 
+
     def get_connection(self):
         if self.connection is None:
-            self.connection = mysql.connector.connect(
-                host=self.host,
-                port=self.port,
-                user=self.user,
-                # password=self.password,
-                # database=self.database
-            )
+            
+            def connect():
+                self.connection = mysql.connector.connect(
+                    host='localhost',
+                    port=3307,
+                    user='root',
+                    password='password',
+                    database=self.database,
+                )
+            connect()
+
+        if self.connection:
+            for _ in range(5):
+                if not self.connection.is_connected():
+                    connect()
+        
+        if not self.connection.is_connected():
+            raise ConnectionError('MySql Connection failed')
         return self.connection
     
 
@@ -60,21 +72,17 @@ class DBConnector:
         values = [tuple(record.values()) for record in records]
 
         with cnx.cursor(dictionary=True) as cursor:
-            print('records[0]', records[0]) #!
 
             cursor.execute(f'USE {self.database};')
             cursor.execute('SELECT COUNT(*) FROM weapons;')
             
             length_before = cursor.fetchone()['COUNT(*)']
-            print('length_before', length_before) #!
 
             if len(records) > 1:
                 r = cursor.executemany(insert_query, values)
-                print('many inserted') #!
             
             elif len(records) == 1:
                 cursor.execute(insert_query, values)
-                print('one inserted') #!
             
             else:
                 raise ValueError('No records to insert')
@@ -86,7 +94,6 @@ class DBConnector:
             inserted = length_after - length_before
             
             result = {"status": "success", "inserted_records": inserted, "all records": length_after}
-            print(result) #!
             return result
         
 

@@ -1,0 +1,10 @@
+docker build -t yosefshoval/weapons:v1 .
+
+docker push yosefshoval/weapons:v1
+
+
+
+# minikube satrt
+
+kubectl apply -f ./k8s
+
